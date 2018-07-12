@@ -1,0 +1,6 @@
+## Interface: 70300
+## Title: ItemSense
+## Author: trippedoutfish
+## Version: 0.1
+
+main.lua
