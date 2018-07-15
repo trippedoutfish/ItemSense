@@ -1,7 +1,9 @@
 ItemSense = LibStub("AceAddon-3.0"):NewAddon("ItemSense", "AceConsole-3.0")
+AceGUI = LibStub("AceGUI-3.0")
 
 function ItemSense:OnInitialize()
   -- Code that you want to run when the addon is first loaded goes here.
+    
 end
 
 function ItemSense:OnEnable()
