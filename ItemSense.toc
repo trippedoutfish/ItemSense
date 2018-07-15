@@ -3,4 +3,6 @@
 ## Author: trippedoutfish
 ## Version: 0.1
 
+embeds.xml
+
 main.lua
