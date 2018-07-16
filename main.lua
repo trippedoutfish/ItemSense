@@ -5,6 +5,8 @@ local itemBank = 1
 
 local itemsWaitedOn = 0
 
+local sIdx = 1
+
 function ItemSense:OnInitialize()
   -- Code that you want to run when the addon is first loaded goes here.
 end
@@ -35,6 +37,33 @@ function RandomItem()
     --itemBank = link
 end
 
+function ReturnItemName(index)
+    local item = ItemSenseDb[index]
+    local i,j = string.find(item, ',')
+    return string.sub(item,1,i-1)
+end
+
+function Get50MatchingItems(text, sIdx)
+    text = string.lower(text)
+    local foundWords = 0
+    local returnIndexes = {}
+    for idx, word in ipairs(ItemSenseDb) do
+        if foundWords == 50 then
+            break
+        end
+        if string.find(string.lower(ItemSenseDb[idx]), text) then 
+            table.insert(returnIndexes, idx)
+            foundWords = foundWords + 1
+            sIdx = idx
+        end
+    end
+    local itemList = {}
+    for n=1, foundWords do
+        table.insert(itemList,ReturnItemName(returnIndexes[n]))
+    end
+    return itemList
+end
+
 local frame = AceGUI:Create("Frame")
 frame:SetTitle("Example Frame")
 frame:SetStatusText(itemBank)
@@ -50,13 +79,26 @@ end
 ItemSense:RegisterEvent('GET_ITEM_INFO_RECEIVED', 'ItemInfoReceived')
 
 local editbox = AceGUI:Create("EditBox")
+local dropdownList = AceGUI:Create("Dropdown")
+
 editbox:SetLabel("Insert text:")
 editbox:SetWidth(200)
 editbox:SetCallback("OnEnterPressed", function(widget, event, text) textStore = text end)
+editbox:SetCallback("OnTextChanged", function(widget, event, text) dropdownList:SetList(Get50MatchingItems(text, sIdx)) end)
 frame:AddChild(editbox)
+
+
 
 local button = AceGUI:Create("Button")
 button:SetText("Click Me!")
 button:SetWidth(200)
 button:SetCallback("OnClick", function() RandomItem() end)
 frame:AddChild(button)
+
+local itemList = {}
+for n=1, 50 do
+    table.insert(itemList,ReturnItemName(n))
+end
+dropdownList:SetList(itemList)
+dropdownList:SetWidth(500)
+frame:AddChild(dropdownList)
