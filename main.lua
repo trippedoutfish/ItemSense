@@ -5,8 +5,6 @@ local itemBank = 1
 
 local itemsWaitedOn = 0
 
-local sIdx = 1
-
 function ItemSense:OnInitialize()
   -- Code that you want to run when the addon is first loaded goes here.
 end
@@ -43,7 +41,7 @@ function ReturnItemName(index)
     return string.sub(item,1,i-1)
 end
 
-function Get50MatchingItems(text, sIdx)
+function Get50MatchingItems(text)
     text = string.lower(text)
     local foundWords = 0
     local returnIndexes = {}
@@ -54,7 +52,6 @@ function Get50MatchingItems(text, sIdx)
         if string.find(string.lower(ItemSenseDb[idx]), text) then 
             table.insert(returnIndexes, idx)
             foundWords = foundWords + 1
-            sIdx = idx
         end
     end
     local itemList = {}
@@ -84,7 +81,7 @@ local dropdownList = AceGUI:Create("Dropdown")
 editbox:SetLabel("Insert text:")
 editbox:SetWidth(200)
 editbox:SetCallback("OnEnterPressed", function(widget, event, text) textStore = text end)
-editbox:SetCallback("OnTextChanged", function(widget, event, text) dropdownList:SetList(Get50MatchingItems(text, sIdx)) end)
+editbox:SetCallback("OnTextChanged", function(widget, event, text) dropdownList:SetList(Get50MatchingItems(text)) end)
 frame:AddChild(editbox)
 
 
