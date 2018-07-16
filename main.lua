@@ -3,6 +3,8 @@ AceGUI = LibStub("AceGUI-3.0")
 
 local itemBank = 1
 
+local itemsWaitedOn = 0
+
 function ItemSense:OnInitialize()
   -- Code that you want to run when the addon is first loaded goes here.
 end
@@ -24,9 +26,10 @@ function RandomItem()
     --print(ItemSenseDb[choice]: sub(i+1))
     local haveCached = (select(2,GetItemInfo(ItemSenseDb[choice]: sub(i+1))))
     if haveCached then
-        SendChatMessage(haveCached,"GUILD")
+        SendChatMessage(haveCached,"PARTY")
     else
-        print("Querying Item info will print to Guild momentarily")
+        itemsWaitedOn = itemsWaitedOn + 1
+        print("Querying Item info will print to PARTY momentarily")
     end
     --itemBank = itemBank + 1
     --itemBank = link
@@ -39,7 +42,10 @@ frame:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
 frame:SetLayout("Flow")
 
 function ItemSense:ItemInfoReceived(event, id)
-    SendChatMessage((select(2,GetItemInfo(id))), "GUILD")
+    if itemsWaitedOn > 0 then
+        SendChatMessage((select(2,GetItemInfo(id))), "PARTY")
+        itemsWaitedOn = itemsWaitedOn - 1
+    end
 end
 ItemSense:RegisterEvent('GET_ITEM_INFO_RECEIVED', 'ItemInfoReceived')
 
