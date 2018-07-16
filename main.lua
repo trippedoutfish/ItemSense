@@ -1,4 +1,4 @@
-ItemSense = LibStub("AceAddon-3.0"):NewAddon("ItemSense", "AceConsole-3.0")
+ItemSense = LibStub("AceAddon-3.0"):NewAddon("ItemSense", "AceConsole-3.0", "AceEvent-3.0")
 AceGUI = LibStub("AceGUI-3.0")
 
 local itemBank = 1
@@ -17,11 +17,31 @@ end
 
 local textStore
 
+function RandomItem()
+    local choice = math.floor(math.random() * (table.getn(ItemSenseDb) - 2) + 2)
+    --print(choice)
+    local i,j = string.find(ItemSenseDb[choice], ',')
+    --print(ItemSenseDb[choice]: sub(i+1))
+    local haveCached = (select(2,GetItemInfo(ItemSenseDb[choice]: sub(i+1))))
+    if haveCached then
+        SendChatMessage(haveCached,"GUILD")
+    else
+        print("Querying Item info will print to Guild momentarily")
+    end
+    --itemBank = itemBank + 1
+    --itemBank = link
+end
+
 local frame = AceGUI:Create("Frame")
 frame:SetTitle("Example Frame")
 frame:SetStatusText(itemBank)
 frame:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
 frame:SetLayout("Flow")
+
+function ItemSense:ItemInfoReceived(event, id)
+    SendChatMessage((select(2,GetItemInfo(id))), "GUILD")
+end
+ItemSense:RegisterEvent('GET_ITEM_INFO_RECEIVED', 'ItemInfoReceived')
 
 local editbox = AceGUI:Create("EditBox")
 editbox:SetLabel("Insert text:")
@@ -32,5 +52,5 @@ frame:AddChild(editbox)
 local button = AceGUI:Create("Button")
 button:SetText("Click Me!")
 button:SetWidth(200)
-button:SetCallback("OnClick", function() print(ItemSenseDb[itemBank]) end)
+button:SetCallback("OnClick", function() RandomItem() end)
 frame:AddChild(button)
