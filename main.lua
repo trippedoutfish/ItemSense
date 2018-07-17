@@ -36,9 +36,9 @@ function RandomItem()
 end
 
 function ReturnItemName(index)
-    local item = ItemSenseDb[index]
-    local i,j = string.find(item, ',')
-    return string.sub(item,1,i-1)
+    local item = ItemSenseDb[index]["value"]
+    --local i,j = string.find(item, ',')
+    return item--string.sub(item,1,i-1)
 end
 
 function Get50MatchingItems(text)
@@ -46,18 +46,19 @@ function Get50MatchingItems(text)
     local foundWords = 0
     local returnIndexes = {}
     for idx, word in ipairs(ItemSenseDb) do
-        if foundWords == 50 then
+        if foundWords == 10 then
             break
         end
-        if string.find(string.lower(ItemSenseDb[idx]), text) then 
+        if string.find(string.lower(ItemSenseDb[idx]["value"]), text) then 
             table.insert(returnIndexes, idx)
             foundWords = foundWords + 1
         end
     end
-    local itemList = {}
+    local itemList = ''
     for n=1, foundWords do
-        table.insert(itemList,ReturnItemName(returnIndexes[n]))
+        itemList = itemList..'\n'..ReturnItemName(returnIndexes[n])
     end
+    itemList = string.sub(itemList, 2)
     return itemList
 end
 
@@ -76,12 +77,12 @@ end
 ItemSense:RegisterEvent('GET_ITEM_INFO_RECEIVED', 'ItemInfoReceived')
 
 local editbox = AceGUI:Create("EditBox")
-local dropdownList = AceGUI:Create("Dropdown")
+local multiEdit = AceGUI:Create("MultiLineEditBox")
 
 editbox:SetLabel("Insert text:")
 editbox:SetWidth(200)
 editbox:SetCallback("OnEnterPressed", function(widget, event, text) textStore = text end)
-editbox:SetCallback("OnTextChanged", function(widget, event, text) dropdownList:SetList(Get50MatchingItems(text)) end)
+editbox:SetCallback("OnTextChanged", function(widget, event, text) multiEdit:SetText(Get50MatchingItems(text)) end)
 frame:AddChild(editbox)
 
 
@@ -92,10 +93,14 @@ button:SetWidth(200)
 button:SetCallback("OnClick", function() RandomItem() end)
 frame:AddChild(button)
 
-local itemList = {}
-for n=1, 50 do
-    table.insert(itemList,ReturnItemName(n))
+local itemList = ''
+for n=1, 10 do
+    itemList = itemList..'\n'..ReturnItemName(n)
 end
-dropdownList:SetList(itemList)
-dropdownList:SetWidth(500)
-frame:AddChild(dropdownList)
+itemList = string.sub(itemList, 2)
+multiEdit:SetNumLines(10)
+multiEdit:SetDisabled(true)
+multiEdit:DisableButton(true)
+multiEdit:SetText(itemList)
+multiEdit:SetWidth(500)
+frame:AddChild(multiEdit)
