@@ -21,10 +21,8 @@ local textStore
 
 function RandomItem()
     local choice = math.floor(math.random() * (table.getn(ItemSenseDb) - 2) + 2)
-    --print(choice)
-    local i,j = string.find(ItemSenseDb[choice], ',')
-    --print(ItemSenseDb[choice]: sub(i+1))
-    local haveCached = (select(2,GetItemInfo(ItemSenseDb[choice]: sub(i+1))))
+
+    local haveCached = (select(2,GetItemInfo(ItemSenseDb[choice]["id"])))
     if haveCached then
         SendChatMessage(haveCached,"PARTY")
     else
