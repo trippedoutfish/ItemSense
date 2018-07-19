@@ -1,7 +1,7 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: ItemSense
 ## Author: trippedoutfish
-## Version: 0.1
+## Version: 0.1.1
 
 embeds.xml
 items.lua
