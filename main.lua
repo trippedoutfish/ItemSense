@@ -63,7 +63,7 @@ end
 local frame = AceGUI:Create("Frame")
 frame:SetTitle("Example Frame")
 frame:SetStatusText(itemBank)
-frame:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
+frame:SetCallback("OnClose", function(widget) widget:Hide() end)
 frame:SetLayout("Flow")
 
 function ItemSense:ItemInfoReceived(event, id)
@@ -102,3 +102,28 @@ multiEdit:DisableButton(true)
 multiEdit:SetText(itemList)
 multiEdit:SetWidth(500)
 frame:AddChild(multiEdit)
+
+
+SLASH_ITEMSENSE1 = "/is"
+SlashCmdList["ITEMSENSE"] = function(msg)
+    msg = string.trim(string.lower(msg))
+    if( string.match(msg, "[a-z/W]+" ) ) then 
+        for idx, word in ipairs(ItemSenseDb) do
+            if string.find(string.lower(ItemSenseDb[idx]["value"]), msg) then 
+                local haveCached = (select(2,GetItemInfo(ItemSenseDb[idx]["id"])))
+                if haveCached then
+                    SendChatMessage(haveCached,"PARTY")
+                else
+                    itemsWaitedOn = itemsWaitedOn + 1
+                end
+                return
+            end
+        end
+    else
+        if( frame:IsVisible() ) then
+            frame:Hide()
+        else
+            frame:Show()
+        end
+    end
+end
