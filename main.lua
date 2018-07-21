@@ -61,10 +61,13 @@ function Get50MatchingItems(text)
 end
 
 local frame = AceGUI:Create("Frame")
-frame:SetTitle("Example Frame")
-frame:SetStatusText(itemBank)
+frame:SetTitle("Search for an item in the textbox")
+frame:SetHeight(300)
+frame:SetWidth(350)
+--frame:SetStatusText(itemBank)
 frame:SetCallback("OnClose", function(widget) widget:Hide() end)
 frame:SetLayout("Flow")
+--frame:Hide()
 
 function ItemSense:ItemInfoReceived(event, id)
     if itemsWaitedOn > 0 then
@@ -85,11 +88,11 @@ frame:AddChild(editbox)
 
 
 
-local button = AceGUI:Create("Button")
-button:SetText("Click Me!")
-button:SetWidth(200)
-button:SetCallback("OnClick", function() RandomItem() end)
-frame:AddChild(button)
+-- local button = AceGUI:Create("Button")
+-- button:SetText("Click Me!")
+-- button:SetWidth(200)
+-- button:SetCallback("OnClick", function() RandomItem() end)
+-- frame:AddChild(button)
 
 local itemList = ''
 for n=1, 10 do
