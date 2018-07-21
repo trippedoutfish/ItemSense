@@ -67,7 +67,7 @@ frame:SetWidth(350)
 --frame:SetStatusText(itemBank)
 frame:SetCallback("OnClose", function(widget) widget:Hide() end)
 frame:SetLayout("Flow")
---frame:Hide()
+frame:Hide()
 
 function ItemSense:ItemInfoReceived(event, id)
     if itemsWaitedOn > 0 then
