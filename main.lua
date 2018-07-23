@@ -24,10 +24,10 @@ function RandomItem()
 
     local haveCached = (select(2,GetItemInfo(ItemSenseDb[choice]["id"])))
     if haveCached then
-        SendChatMessage(haveCached,"PARTY")
+        SendChatMessage(haveCached,"SAY")
     else
         itemsWaitedOn = itemsWaitedOn + 1
-        print("Querying Item info will print to PARTY momentarily")
+        print("Querying Item info will print to SAY momentarily")
     end
     --itemBank = itemBank + 1
     --itemBank = link
@@ -71,7 +71,7 @@ frame:Hide()
 
 function ItemSense:ItemInfoReceived(event, id)
     if itemsWaitedOn > 0 then
-        SendChatMessage((select(2,GetItemInfo(id))), "PARTY")
+        SendChatMessage((select(2,GetItemInfo(id))), "SAY")
         itemsWaitedOn = itemsWaitedOn - 1
     end
 end
@@ -115,7 +115,7 @@ SlashCmdList["ITEMSENSE"] = function(msg)
             if string.find(string.lower(ItemSenseDb[idx]["value"]), msg) then 
                 local haveCached = (select(2,GetItemInfo(ItemSenseDb[idx]["id"])))
                 if haveCached then
-                    SendChatMessage(haveCached,"PARTY")
+                    SendChatMessage(haveCached,"SAY")
                 else
                     itemsWaitedOn = itemsWaitedOn + 1
                 end
